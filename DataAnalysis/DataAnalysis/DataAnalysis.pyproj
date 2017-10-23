@@ -5,8 +5,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>993b6c5f-4aa8-44fd-ad9a-ecd0dc629e51</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>CsvReader.py</StartupFile>
-    <SearchPath>data\</SearchPath>
+    <StartupFile>Ex\mnistEx.py</StartupFile>
+    <SearchPath>data\;Common\;dataset\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>DataAnalysis</Name>
@@ -21,15 +21,36 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Common\AnnBaseLine.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="CsvReader.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataAnalysis.py" />
+    <Compile Include="dataset\mnist.py" />
+    <Compile Include="dataset\__init__.py" />
+    <Compile Include="Ex\mnistEx.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPS\IPSBaseLine.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="dataset\" />
     <Folder Include="data\" />
+    <Folder Include="Common\" />
+    <Folder Include="IPS\" />
+    <Folder Include="Ex\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dataset\lena.png" />
+    <Content Include="dataset\lena_gray.png" />
+    <Content Include="dataset\t10k-images-idx3-ubyte.gz" />
+    <Content Include="dataset\t10k-labels-idx1-ubyte.gz" />
+    <Content Include="dataset\train-images-idx3-ubyte.gz" />
+    <Content Include="dataset\train-labels-idx1-ubyte.gz" />
     <Content Include="data\1-1_Refelctivity.csv" />
   </ItemGroup>
   <PropertyGroup>
