@@ -5,8 +5,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>993b6c5f-4aa8-44fd-ad9a-ecd0dc629e51</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Ex\mnistEx.py</StartupFile>
-    <SearchPath>data\;Common\;dataset\</SearchPath>
+    <StartupFile>IPS\IPSBaseLine_CampleSeperation_CrossCheck.py</StartupFile>
+    <SearchPath>data\;Common\;dataset\;IPS\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>DataAnalysis</Name>
@@ -33,7 +33,28 @@
     <Compile Include="Ex\mnistEx.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Ex\SaveAndRestore.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ex\Test.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPS\DataTranform.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IPS\IPSBaseLine.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPS\IPSBaseLine_CampleSeperation_CrossCheck.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPS\IPSBaseLine_SampleSeperation.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPS\IPSCheckModel.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPS\ReadIpsData.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

@@ -15,9 +15,10 @@ tf.set_random_seed(777)  # reproducibility
 np.random.seed(7)
 
 batchSize = 100
-trainEpoch = 1000
+trainEpoch = 80000
+printstep = 50
 
-lr = 0.5
+lr = 0.01
 iSize = 784
 h1Size = 50
 h2Size = 50
@@ -41,7 +42,7 @@ b3 = tf.Variable( tf.zeros( [oSize] ))
  
 L1 = tf.nn.sigmoid( tf.matmul( X , W1) + b1 )
 L2 = tf.nn.sigmoid( tf.matmul( L1 , W2 ) + b2)
-																		   
+                                                                           
 Output = tf.nn.softmax( tf.matmul( L2 , W3 ) + b3)
 
 #Loss = tf.reduce_mean( - tf.reduce_sum( Y * tf.log( Output ) , reduction_indices = [1] ) ) 
@@ -60,15 +61,17 @@ LossList = []
 LossTest = []
 
 for i in range(0,trainEpoch):
-	batchMask = np.random.choice( x_train.shape[0] , batchSize)
-	xBatch = x_train[batchMask]
-	yBatch = y_train[batchMask]
+    batchMask = np.random.choice( x_train.shape[0] , batchSize)
+    xBatch = x_train[batchMask]
+    yBatch = y_train[batchMask]
 
-	lossTrain = sess.run([Loss , optimizer] , feed_dict = { X  :xBatch , Y : yBatch })
-	lossTest = sess.run([Loss] , feed_dict = { X  :x_test , Y : y_test })
-	
-	LossList.append(lossTrain)
-	LossTest.append(lossTest)
+    lossTrain = sess.run([Loss , optimizer] , feed_dict = { X  :xBatch , Y : yBatch })
+    lossTest = sess.run([Loss] , feed_dict = { X  :x_test , Y : y_test })
+    
+    LossList.append(lossTrain)
+    LossTest.append(lossTest)       
+    if i % 50 == 0 :
+        print("Train : {0}  Tset : {1}".format(lossTrain, lossTest))
 
 
 #plot								
@@ -76,7 +79,7 @@ for i in range(0,trainEpoch):
 plt.title( "Loss Graph" )
 plt.xlabel( "Epoch" )
 plt.ylabel( "Cross Entropy Loss" )
-plt.plot(LossList , 'r--' )
+plt.plot(LossList , 'r' )
 plt.plot(LossTest , 'b' )
 plt.show()
  
