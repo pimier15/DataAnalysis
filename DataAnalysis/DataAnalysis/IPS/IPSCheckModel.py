@@ -1,25 +1,25 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-from DataTranform import Normalizer
+from DataTransform import Normalizer
 from sklearn.preprocessing import normalize
-from ReadIpsData import *
+from IPSData import *
 tf.set_random_seed(777)  # reproducibility
 np.random.seed(7)
 
 NormX2 = Normalizer()
 NormY2 = Normalizer()
-ips = ReadIPS(r"F:\IPSData")
+ips = CollectorIPSData(r"F:\IPSData")
 thicknessPath = r"F:\KLAData\ThicknessData"
 savepath = r"F:\Program\DataAnalysis\DataAnalysis\DataAnalysis\save" 
-x2Temp , y2Temp , p2temp = ips.GetAllReflcThick(2 , thicknessPath)
+x2Temp , y2Temp , p2temp = ips.Read_RflcThck(2 , thicknessPath)
 x2Temp = x2Temp[: , 350:850]
 
 x2Train = NormX2.Normalization( x2Temp)
 y2Train = NormY2.Normalization( y2Temp)
 
 
-x3Temp , y3Temp , p3temp = ips.GetAllReflcThick(3 , thicknessPath)
+x3Temp , y3Temp , p3temp = ips.Read_RflcThck(3 , thicknessPath)
 x3Temp = x3Temp[: , 350:850]
 
 x3Train = NormX2.Normalization( x3Temp)

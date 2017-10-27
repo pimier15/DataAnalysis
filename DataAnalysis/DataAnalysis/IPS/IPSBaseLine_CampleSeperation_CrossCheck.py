@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-from DataTranform import Normalizer
+from DataTransform import Normalizer
 from sklearn.preprocessing import normalize
 from ReadIpsData import *
 tf.set_random_seed(777)  # reproducibility

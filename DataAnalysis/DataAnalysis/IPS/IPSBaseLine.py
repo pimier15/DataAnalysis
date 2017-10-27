@@ -1,29 +1,24 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-from DataTranform import Normalizer
+from DataTransform import Normalizer
 from sklearn.preprocessing import normalize
-from ReadIpsData import *
+from IPSData import *
 tf.set_random_seed(777)  # reproducibility
 np.random.seed(7)
 
-NormX2 = Normalizer()
-NormY3 = Normalizer()
-ips = ReadIPS(r"F:\IPSData")
-thicknessPath = r"F:\KLAData\ThicknessData"
+basepath = r"F:\IPSData"
+thckpath = r"F:\KLAData\ThicknessData"
+ipsdata = CollectorIPSData(basepath , thckpath)
+xs , ys , ps , ns = ipsdata.ReadMulti_RflcThck_Norm([2,3])
+
 savepath = r"F:\Program\DataAnalysis\DataAnalysis\DataAnalysis\save" 
-x2Temp , y2Temp , pos2Temp = ips.GetAllReflcThick(2 , thicknessPath)
-x2Temp = x2Temp[: , 350:850]
 
-x2Train = NormX2.Normalization( x2Temp)
-y2Train = NormY3.Normalization( y2Temp)
+x2Train = xs[0][: , 350:850]
+y2Train = ys[0]
 
-
-x3Temp , y3Temp , pos3Temp = ips.GetAllReflcThick(3 , thicknessPath)
-x3Temp = x3Temp[: , 350:850]
-
-x3Train = NormX2.Normalization( x3Temp)
-y3Train = NormY2.Normalization( y3Temp)
+x3Train = xs[1][: , 350:850]
+y3Train = ys[1]
 
 
 x2Test = x2Train[:10,:]
@@ -36,10 +31,6 @@ x3Train = x3Train[11:: , : ]
 y3Test = y3Train[:10]
 y3Train = y3Train[11:]
 
-
-
-
-
 xTrain = np.concatenate( (x2Train , x3Train) , axis = 0)
 yTrain = np.concatenate( (y2Train , y3Train) )
 yTrain = yTrain.reshape( yTrain.shape[0] , 1)
@@ -47,8 +38,6 @@ yTrain = yTrain.reshape( yTrain.shape[0] , 1)
 xTest = np.concatenate( (x2Test , x3Test) , axis = 0)
 yTest = np.concatenate( (y2Test , y3Test) )
 yTest = yTest.reshape( yTest.shape[0] , 1)
-
-
 
 
 sampleSize , iSize = xTrain.shape
@@ -107,6 +96,7 @@ LossList = []
 #LossTest = []
 
 CorrBest = 0
+LossBest = 1
 
 for i in range(0,trainEpoch):
     batchMask = np.random.choice( xTrain.shape[0] , batchSize)
@@ -125,8 +115,8 @@ for i in range(0,trainEpoch):
         
         Predict , Label = sess.run([Output , Y] , feed_dict = { X : xTest , Y : yTest })
 
-        Predict = NormY2.DeNormalization(Predict)    
-        Label = NormY2.DeNormalization(Label)    
+        Predict = ns[0]['Y'].DeNormalization(Predict)    
+        Label = ns[0]['Y'].DeNormalization(Label)    
        
         pre = np.ndarray.flatten( Predict)
         lb = np.ndarray.flatten( Label)
@@ -134,15 +124,25 @@ for i in range(0,trainEpoch):
         core = np.corrcoef( pre , lb )[0,1]
         PredictLabel.append([Predict,Label])
 
-        if CorrBest < core :
-            print()
-            print("Current Best Correlation : {0}".format(core))
-            CorrBest = core
-            saver.save(sess , os.path.join(savepath , 'Best_model.ckpt') )
-            for i in range(20):
-                print("Predict  : {0}  Target L {1}".format(  Predict[i], Label[i]))
-
-            print()
+        criticByLoss = True
+        if criticByLoss :
+             if LossBest > lossTrain :
+               print()
+               print("Loss Best : {0}".format(core))
+               LossBest = lossTrain
+               saver.save(sess , os.path.join(savepath , 'Best_model.ckpt') )
+               for i in range(20):
+                   print("Predict  : {0}  Target L {1}".format(  Predict[i], Label[i]))
+               print()
+        else : 
+           if CorrBest < core :
+               print()
+               print("Current Best Correlation : {0}".format(core))
+               CorrBest = core
+               saver.save(sess , os.path.join(savepath , 'Best_model.ckpt') )
+               for i in range(20):
+                   print("Predict  : {0}  Target L {1}".format(  Predict[i], Label[i]))
+               print()
 
         #plt.scatter(Predict , Label )
         #plt.xlabel("Predict")
