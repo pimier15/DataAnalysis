@@ -113,7 +113,7 @@ class CollectorIPSData:
         trgN = str(trgNum)
         for (path , dir , filse ) in os.walk(basePath):
             for filename in  filse:
-                key = filename.split('_')
+                key = filename.replace("#","").strip().split('_')
                 num = key[0].split('-')[0]
                 type = key[1]
                 

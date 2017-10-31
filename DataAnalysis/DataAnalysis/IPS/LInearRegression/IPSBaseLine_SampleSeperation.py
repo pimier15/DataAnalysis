@@ -2,25 +2,26 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import csv    
+from time import gmtime, strftime
+from os import path
 from IPSData import CollectorIPSData
 from sklearn.preprocessing import normalize
 from ReadIpsData import *
 tf.set_random_seed(777)  # reproducibility
 np.random.seed(7)
 
-basepath = r"F:\IPSData"
+#basepath = r"F:\IPSData"
+basepath = r"F:\IPSData2"
 thckpath = r"F:\KLAData\ThicknessData"
 ipsdata = CollectorIPSData(basepath , thckpath)
-xs , ys , ps , ns = ipsdata.ReadMulti_RflcThck_Norm([2,3])
+xs , ys , ps , ns = ipsdata.ReadMulti_RflcThck_Norm([2,4])
 
 savepath = r"F:\Program\DataAnalysis\DataAnalysis\DataAnalysis\save" 
 
-x2Train = xs[0][: , 350:850]
+x2Train = xs[0][: , 450:850]
 y2Train = ys[0]
-x3Train = xs[1][: , 350:850]
+x3Train = xs[1][: , 450:850]
 y3Train = ys[1]
-
-
 
 x2Test = x2Train[:10,:]
 x2Train = x2Train[11:: , : ]
@@ -71,7 +72,7 @@ def SaveWBN(session):
 
 iSize = x2Train.shape[1]
 
-lr = 0.01
+lr = 0.001
 h1Size = 200
 h2Size = 30
 h3Size = 10
@@ -118,7 +119,9 @@ optimizer = tf.train.AdamOptimizer( lr ).minimize( Loss )
 
 sess =tf.Session()
 sess.run( tf.global_variables_initializer() )
-saver.restore(sess , os.path.join(savepath , 'Best_model.ckpt')) 
+
+if path.isfile( os.path.join(savepath , 'Best_model_LR.ckpt')):
+    saver.restore(sess , os.path.join(savepath , 'Best_model_LR.ckpt')) 
 
 
 LossList = []
@@ -132,9 +135,11 @@ count = 1
 while True:
     batchMask2 = np.random.choice( x2Train.shape[0] , batchSize)
     batchMask3 = np.random.choice( x3Train.shape[0] , batchSize)
+    
     x2Batch = x2Train[batchMask2]
-    y2Batch = y3Train[batchMask2]
-    x3Batch = x2Train[batchMask3]
+    y2Batch = y2Train[batchMask2]
+
+    x3Batch = x3Train[batchMask3]
     y3Batch = y3Train[batchMask3]
     
     xBatch = np.concatenate( (x2Batch,x3Batch) )
@@ -150,7 +155,7 @@ while True:
         lossTrain = sess.run([Loss] , feed_dict = { X  :xTrain , Y : yTrain })
         lossTest = sess.run([Loss] , feed_dict = { X  :xTest , Y : yTest })
         CurrentLoss = lossTrain[0]
-        print("Iter : {0} , Trrain Loss : {1}  ,  Test Loss : {2} ".format(count , lossTrain[0] , lossTest[0]))
+        print("Iter : {0} , Trrain Loss : {1:.5f}  ,  Test Loss : {2:.5f} ".format(count , lossTrain[0] , lossTest[0]))
 
         Predict2 , Label2 = sess.run([Output , Y] , feed_dict = { X : x2Test , Y : y2Test })
         Predict3 , Label3 = sess.run([Output , Y] , feed_dict = { X : x3Test , Y : y3Test })
@@ -171,13 +176,17 @@ while True:
 
         criticByLoss = True
         if criticByLoss :
-             if LossBest > lossTrain[0] + lossTest[0]*0.3:
+             if LossBest > lossTrain[0]*0.3 + lossTest[0]:
                print()
-               print("Loss Best : {0}".format(lossTrain[0]))
+               print("Loss Best : {0:3.5f}".format(lossTrain[0]))
                LossBest = lossTrain[0]
-               saver.save(sess , os.path.join(savepath , 'Best_model.ckpt') )
+               showtime = strftime("%Y-%m-%d_%H-%M-%S", gmtime())
+               dirname = os.path.join(savepath , showtime )
+               os.mkdir(dirname)
+               saver.save(sess , os.path.join( dirname , 'Best_model_LR.ckpt') )
+               saver.save(sess , os.path.join( savepath , 'Best_model_LR.ckpt') )
                for i in range(20):
-                   print("Predict  : {0}  Target L {1}".format(  Predict[i], Label[i]))
+                   print("Predict  : {0:.5f}  Target L {1:.5f}".format(  Predict[i][0], Label[i][0]))
                print()
                SaveWBN(sess)
               
@@ -186,9 +195,16 @@ while True:
                print()
                print("Current Best Correlation : {0}".format(core))
                CorrBest = core
-               saver.save(sess , os.path.join(savepath , 'Best_model.ckpt') )
+               showtime = strftime("%Y-%m-%d_%H-%M-%S", gmtime())
+               dirname = os.path.join(savepath , showtime )
+               os.mkdir(dirname)
+               saver.save(sess , os.path.join( dirname , 'Best_model_LR.ckpt') )
+               saver.save(sess , os.path.join( savepath , 'Best_model_LR.ckpt') )
+
+               print(type(Predict[0]))
+               print(type(Predict[0][0]))
                for i in range(20):
-                   print("Predict  : {0}  Target L {1}".format(  Predict[i], Label[i]))
+                   print("Predict  : {0:.5f}  Target L {1:.5f}".format(  Predict[i][0], Label[i][0]))
                print() 
                SaveWBN(sess)
 
@@ -198,9 +214,9 @@ while True:
         #plt.xlabel("Predict")
         #plt.ylabel("Target")
         #plt.show()
-        LossList.append(CurrentLoss)
-        if count%10000 == 0 :
-            saver.save(sess , os.path.join(savepath , str(i)+'__model.ckpt') )
+        #LossList.append(CurrentLoss)
+        #if count%10000 == 0 :
+        #    saver.save(sess , os.path.join(savepath , str(i)+'__model.ckpt') )
         
     count += 1
     #LossTest.append(lossTest)
