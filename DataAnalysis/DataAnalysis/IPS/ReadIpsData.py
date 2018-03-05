@@ -79,7 +79,6 @@ class ReadIPS:
         pdatas = reduce( lambda f,s : np.concatenate((f,s) , axis = 0) , Pointtemp)
          
         return xdatas.T , ydatas , pdatas
-
         
 
 

@@ -10,7 +10,7 @@ from sklearn.utils import shuffle
 
 
 
-forest   = RandomForestRegressor(n_estimators = 20 , max_features = 'sqrt' , criterion = 'mse' , max_depth = 12 , n_jobs = 2 )
+forest   = RandomForestRegressor(n_estimators = 20 , max_features = "sqrt" , criterion = 'mse' , max_depth = 7 , n_jobs = 2 )
 
 basepath = r"F:\IPSData2"
 thckpath = r"F:\KLAData\ThicknessData"
@@ -31,7 +31,7 @@ XTest  , yTest  , pTest  = {},{},{}
 XTrainALl , yTrainAll = {},{} 
 XTestALl , yTestAll   = {},{}
 XALL , yALL = {},{}
-NumOfTest = 125
+NumOfTest = 100
 PredicTrainPer = {}
 PredicTestPer = {}
 
@@ -48,10 +48,14 @@ val =  tuple(XShuf.values())
 XALL = np.concatenate( tuple(XShuf.values()) , axis = 0)
 yALL = np.concatenate( tuple(yShuf.values())).flatten()
 yALL = yALL.reshape( yALL.shape[0], 1).flatten()
-print   (XALL.shape)
 
 for i in SamplesIdx:
-    XTrain[i] = XShuf[i][NumOfTest+1 ::, :]
+    if(i == 2):
+        XTrain[i] = XShuf[i][NumOfTest+1 ::, :]
+        noise = np.random.normal(3  , 3 ,len( XTrain[i]) )
+        XTrain[i] = (XTrain[i].T + noise).T
+    else:
+        XTrain[i] = XShuf[i][NumOfTest+1 ::, :]
     XTest[i]  = XShuf[i][:NumOfTest, :]
     yTrain[i] = yShuf[i][NumOfTest+1::]
     yTest[i]  = yShuf[i][:NumOfTest]

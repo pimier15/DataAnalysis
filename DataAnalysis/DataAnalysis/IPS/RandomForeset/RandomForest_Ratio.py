@@ -10,10 +10,10 @@ from sklearn.utils import shuffle
 
 
 
-forest   = RandomForestRegressor(n_estimators = 20 , max_features = 'sqrt' , criterion = 'mse' , max_depth = 12 , n_jobs = 2 )
+forest   = RandomForestRegressor(n_estimators = 10 , max_features = 'sqrt' , criterion = 'mse' , max_depth = 5 , n_jobs = 2 )
 
 basepath = r"F:\IPSData2"
-thckpath = r"F:\KLAData\ThicknessData"
+thckpath = r"F:\KLAData\ratioData"
 ipsdata = CollectorIPSData(basepath , thckpath)
 
 Samples = [1,2,3,4]
@@ -31,7 +31,7 @@ XTest  , yTest  , pTest  = {},{},{}
 XTrainALl , yTrainAll = {},{} 
 XTestALl , yTestAll   = {},{}
 XALL , yALL = {},{}
-NumOfTest = 125
+NumOfTest = 10
 PredicTrainPer = {}
 PredicTestPer = {}
 
@@ -48,7 +48,6 @@ val =  tuple(XShuf.values())
 XALL = np.concatenate( tuple(XShuf.values()) , axis = 0)
 yALL = np.concatenate( tuple(yShuf.values())).flatten()
 yALL = yALL.reshape( yALL.shape[0], 1).flatten()
-print   (XALL.shape)
 
 for i in SamplesIdx:
     XTrain[i] = XShuf[i][NumOfTest+1 ::, :]
@@ -120,11 +119,11 @@ for i in SamplesIdx:
     plt.scatter(PredicTrainPer[i] , yTrain[i] , c = colorTrain[i] , alpha = 0.5 , label = "#{0}Train".format(str(i+1)))
     plt.scatter(PredicTestPer[i] , yTest[i]   , c = colorTest[i]  , alpha = 0.9 , label = "#{0}Test".format(str(i+1)))
 
-plt.scatter( [270]*len(yALL) , yALL   , c = 'brown' , alpha = 0.9 , label = "Target")
+plt.scatter( [11]*len(yALL) , yALL   , c = 'brown' , alpha = 0.9 , label = "Target")
 plt.plot( predict , fit[0]*predict + fit[1] , color = 'Turquoise')
 plt.legend()
-plt.xlim(260,380)
-plt.ylim(260,380)
+plt.xlim(10,25)
+plt.ylim(10,25)
 plt.legend()
 #plt.plot(LossTest , 'b' )
 

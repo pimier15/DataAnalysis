@@ -5,23 +5,35 @@ import csv
 from time import gmtime, strftime
 from os import path
 from IPSData import CollectorIPSData
-from sklearn.preprocessing import normalize
+from sklearn.preprocessing import normalize 
 from ReadIpsData import *
 tf.set_random_seed(777)  # reproducibility
 np.random.seed(7)
 
 #basepath = r"F:\IPSData"
 basepath = r"F:\IPSData2"
-thckpath = r"F:\KLAData\ThicknessData"
+thckpath = r"F:\KLAData\ratioData"
 ipsdata = CollectorIPSData(basepath , thckpath)
-xs , ys , ps , ns = ipsdata.ReadMulti_RflcThck_Norm([2,4])
+
+selectedNum =[1,2,3,4]
+
+xs , ys , ps , ns = ipsdata.ReadMulti_RflcThck_Norm(selectedNum)
 
 savepath = r"F:\Program\DataAnalysis\DataAnalysis\DataAnalysis\save" 
 
-x2Train = xs[0][: , 450:850]
-y2Train = ys[0]
-x3Train = xs[1][: , 450:850]
-y3Train = ys[1]
+
+XAll = np.concatenate(tuple(xs))
+YAll = np.concatenate(tuple(ys))
+XTrains = []
+XTests = []
+YTrains = []
+YTests = []
+
+
+
+for i in selectedNum:
+    XTrains.append( xs[i][: , 450:850] )
+    YTrains.append(ys[i])
 
 x2Test = x2Train[:10,:]
 x2Train = x2Train[11:: , : ]

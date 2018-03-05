@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>993b6c5f-4aa8-44fd-ad9a-ecd0dc629e51</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>IPS\RandomForeset\IPSRandomForest.py</StartupFile>
+    <StartupFile>IPS\RandomForeset\Performance.py</StartupFile>
     <SearchPath>data\;Common\;dataset\;IPS\;DataCollector\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -34,6 +34,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataAnalysis.py" />
+    <Compile Include="DataCollector\DataPreProcessing.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DataCollector\IPSData.py">
       <SubType>Code</SubType>
     </Compile>
@@ -66,10 +69,22 @@
     <Compile Include="IPS\IPSCheckModel.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IPS\RandomForeset\ExaplainOfError.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IPS\RandomForeset\IPSRandomForest.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IPS\RandomForeset\IPSRandomForest_Check.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPS\RandomForeset\NoiseTest.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPS\RandomForeset\Performance.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPS\RandomForeset\RandomForest_Ratio.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IPS\ReadIpsData.py">
